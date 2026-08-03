@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>SERPENT — Snake Game+</title>
+<link rel="website icon" type="png" href="images/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<!-- ═══════════════════════════════════════════════════════════════
+     LOADING SCREEN
+═══════════════════════════════════════════════════════════════ -->
+<div id="loadingScreen">
+  <div class="loading-content">
+    <div class="loading-logo-wrap">
+      <img src="images/logo.png" alt="SERPENT" class="loading-logo">
+      <div class="loading-glow"></div>
+    </div>
+    <div class="loading-title">SERPENT</div>
+    <div class="loading-subtitle">SNAKE EVOLVED</div>
+    <div class="loading-bar-container">
+      <div class="loading-bar">
+        <div class="loading-bar-fill"></div>
+      </div>
+      <div class="loading-percent">0%</div>
+    </div>
+    <div class="loading-particles" id="loadingParticles"></div>
+  </div>
+</div>
+
+<div id="app">
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SIDEBAR (desktop only)
+═══════════════════════════════════════════════════════════════ -->
+<div id="sidebar">
+  <div class="sb-logo">SERPENT</div>
+  <div class="sb-sub">SNAKE EVOLVED</div>
+  <div class="sb-divider"></div>
+
+  <!-- Score panel -->
+  <div class="sb-panel" id="sbScorePanel" style="display:none">
+    <div class="sb-panel-title">CURRENT GAME</div>
+    <div class="sb-score-big" id="sbScore">0</div>
+    <div class="sb-score-label">SCORE</div>
+    <div style="margin-top:10px">
+      <div class="sb-row"><span class="sb-row-label">Length</span><span class="sb-row-val" id="sbLen">3</span></div>
+      <div class="sb-row"><span class="sb-row-label">Mode</span><span class="sb-row-val" id="sbMode">—</span></div>
+      <div class="sb-row"><span class="sb-row-label">Best</span><span class="sb-row-val" id="sbBest">0</span></div>
+    </div>
+  </div>
+
+  <!-- Wallet -->
+  <div class="sb-wallet">
+    <div class="sb-coin"><div class="sb-coin-val" id="sbCoins">0</div><div class="sb-coin-lbl">🪙 COINS</div></div>
+    <div class="sb-dia"> <div class="sb-dia-val"  id="sbDias">0</div> <div class="sb-dia-lbl">💎 DIAMONDS</div></div>
+  </div>
+
+  <!-- High scores -->
+  <div class="sb-panel">
+    <div class="sb-panel-title">HIGH SCORES</div>
+    <div id="sbHsTable"></div>
+  </div>
+
+  <!-- Active powerups -->
+  <div class="sb-panel" id="sbPuPanel" style="display:none">
+    <div class="sb-panel-title">ACTIVE POWER-UPS</div>
+    <div class="sb-pu-list" id="sbPuList"></div>
+  </div>
+
+  <!-- Food legend -->
+  <div class="sb-panel">
+    <div class="sb-panel-title">FOOD VALUES</div>
+    <div class="sb-legend" id="sbLegend"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     MAIN AREA
+═══════════════════════════════════════════════════════════════ -->
+<div id="main">
+
+  <!-- HUD (shown during game) -->
+  <div id="hud" style="display:none">
+    <div>
+      <div class="hud-score" id="hudScore">0</div>
+      <div class="hud-best"  id="hudBest">BEST: 0</div>
+    </div>
+    <div style="text-align:center">
+      <div class="hud-mode-tag" id="hudMode">EASY</div>
+    </div>
+    <div class="hud-wallet">
+      <span class="hc" id="hudC">🪙 0</span>
+      <span class="hd" id="hudD">💎 0</span>
+    </div>
+    <button class="hud-pause-btn" id="pauseBtn">⏸ PAUSE</button>
+  </div>
+  <div id="puBar" style="display:none"></div>
+
+  <!-- Canvas -->
+  <div id="canvasWrap">
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- Game Over -->
+    <div id="goOverlay" class="overlay hidden">
+      <div class="go-title">GAME OVER</div>
+      <div class="go-score" id="goScore">SCORE: 0</div>
+      <div class="go-earn">Session: <span id="goC">🪙 0</span> <span id="goD">💎 0</span></div>
+      <div class="go-hs hidden" id="goHS">★ NEW HIGH SCORE ★</div>
+      <div class="go-hint">SPACE / TAP TO RETRY</div>
+      <div class="go-actions">
+        <button class="btn primary" id="retryBtn">↺ RETRY</button>
+        <button class="btn" id="goMenuBtn">⌂ MENU</button>
+      </div>
+    </div>
+
+    <!-- Pause -->
+    <div id="pauseOverlay" class="overlay hidden">
+      <div class="pause-title">PAUSED</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+        <button class="btn primary" id="resumeBtn">▶ RESUME</button>
+        <button class="btn" id="restartBtn">↺ RESTART</button>
+        <button class="btn" id="pauseMenuBtn">⌂ MENU</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       SCREENS (menu, shop, settings — all inside #main)
+  ═══════════════════════════════════════════════════════════ -->
+
+  <!-- MENU -->
+  <div id="menuScreen" class="screen">
+    <div class="menu-logo-wrap">
+      <span class="menu-logo">SERPENT</span>
+      <span class="menu-sub">SNAKE EVOLVED</span>
+    </div>
+    <div class="snake-prev" id="snakePrev"></div>
+    <div class="menu-wallet"><span class="mwc" id="mCoins">🪙 0</span><span class="mwd" id="mDias">💎 0</span></div>
+    <div class="menu-hs" id="menuHs"></div>
+    <div class="mode-cards" id="modeCards"></div>
+  <div class="menu-actions">
+    <button class="btn primary" id="startBtn" disabled>▶ PLAY</button>
+  </div>
+  <div class="menu-tabs" id="menuTabs"></div>
+
+  <!-- Info Screen (Mobile Only) -->
+  <div id="infoScreen" class="screen hidden panel-screen">
+    <div class="panel-inner">
+      <div class="panel-hdr">
+        <button class="back-btn" id="backInfo">← BACK</button>
+        <div class="panel-title">FOOD VALUES</div>
+      </div>
+      <div id="infoContent"></div>
+    </div>
+  </div>
+  </div>
+
+  <!-- THEMES -->
+  <div id="themeScreen" class="screen hidden panel-screen">
+    <div class="panel-inner">
+      <div class="panel-hdr">
+        <button class="back-btn" id="backTh">← BACK</button>
+        <div class="panel-title">THEMES</div>
+        <div class="panel-wallet"><span style="color:var(--gold)" id="thC">🪙 0</span>&ensp;<span style="color:var(--cyan)" id="thD">💎 0</span></div>
+      </div>
+      <div id="thPreview" class="shop-preview"></div>
+      <div class="card-grid" id="thList"></div>
+    </div>
+  </div>
+
+  <!-- SKINS -->
+  <div id="skinScreen" class="screen hidden panel-screen">
+    <div class="panel-inner">
+      <div class="panel-hdr">
+        <button class="back-btn" id="backSk">← BACK</button>
+        <div class="panel-title">SNAKE SKINS</div>
+        <div class="panel-wallet"><span style="color:var(--gold)" id="skC">🪙 0</span></div>
+      </div>
+      <div id="skPreview" class="shop-preview"></div>
+      <div class="card-grid" id="skList"></div>
+    </div>
+  </div>
+
+  <!-- BOOSTS -->
+  <div id="boostScreen" class="screen hidden panel-screen">
+    <div class="panel-inner">
+      <div class="panel-hdr">
+        <button class="back-btn" id="backBu">← BACK</button>
+        <div class="panel-title">UPGRADES</div>
+        <div class="panel-wallet"><span style="color:var(--gold)" id="buC">🪙 0</span></div>
+      </div>
+      <div class="card-grid" id="buList"></div>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div id="settingsScreen" class="screen hidden panel-screen">
+    <div class="panel-inner">
+      <div class="panel-hdr">
+        <button class="back-btn" id="backSet">← BACK</button>
+        <div class="panel-title">SETTINGS</div>
+      </div>
+
+      <!-- Volume -->
+      <div class="set-group">
+        <span class="set-label">🔊 MASTER VOLUME</span>
+        <div class="vol-row">
+          <span style="font-size:1.1rem">🔈</span>
+          <input type="range" id="volSlider" min="0" max="100" value="70">
+          <span class="vol-val" id="volVal">70%</span>
+          <span style="font-size:1.1rem">🔊</span>
+        </div>
+      </div>
+      <div class="set-group">
+        <span class="set-label">🎮 GAME BGM</span>
+        <div class="vol-row">
+          <span style="font-size:1.1rem">🎵</span>
+          <input type="range" id="bgVolSlider" min="0" max="100" value="100">
+          <span class="vol-val" id="bgVolVal">100%</span>
+          <span style="font-size:1.1rem">🎶</span>
+        </div>
+      </div>
+
+      <!-- Keyboard controls (desktop) -->
+      <div class="set-group">
+        <span class="set-label">⌨️ KEYBOARD CONTROLS</span>
+        <div class="ctrl-grid">
+          <div><span class="ctrl-key">W A S D</span> Move snake</div>
+          <div><span class="ctrl-key">↑ ↓ ← →</span> Move snake</div>
+          <div><span class="ctrl-key">P</span> Pause / Resume</div>
+          <div><span class="ctrl-key">SPACE</span> Pause / Retry</div>
+          <div><span class="ctrl-key">ESC</span> Menu / Pause</div>
+        </div>
+      </div>
+
+      <!-- Touch controls -->
+      <div class="set-group">
+        <span class="set-label">👆 TOUCH CONTROLS (MOBILE)</span>
+        <div style="font-size:.8rem;color:var(--dim);line-height:2">
+          <b style="color:var(--text)">Swipe anywhere</b> on the game screen to change direction
+        </div>
+      </div>
+
+      <!-- CHEAT CODE -->
+      <div class="set-group">
+        <span class="set-label">🔓 DEVELOPER MODE</span>
+        <div class="cheat-box">
+          <div class="cheat-title">
+            <span style="font-size:1.2rem">💀</span> CHEAT CODE
+            <span style="color:var(--dim);font-size:.55rem">&lt;&gt; UNLOCK ALL</span>
+          </div>
+          <div id="cheatActiveBar" class="cheat-active-bar" style="display:none">
+            <span class="cheat-active-label">✅ DEV MODE ACTIVE — ALL UNLOCKED</span>
+            <button class="back-btn" id="cheatExitBtn" style="border-color:#ff3a3a;color:#ff6b6b">EXIT MODE</button>
+          </div>
+          <div id="cheatInputSection">
+            <div class="cheat-input-row">
+              <input type="password" id="cheatInput" class="cheat-input" placeholder="ENTER CODE" maxlength="10" autocomplete="off">
+              <button class="cheat-submit" id="cheatSubmitBtn">UNLOCK</button>
+            </div>
+            <div class="cheat-status" id="cheatStatus"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- #main -->
+</div><!-- #app -->
+
+<div id="audioToast">🔊 Audio <span>unlocked</span></div>
+<div id="uiToast"></div>
+
+<script src="data.js"></script>
+<script src="storage.js"></script>
+<script src="audio.js"></script>
+<script src="game.js"></script>
+<script src="ui.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
