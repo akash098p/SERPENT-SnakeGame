@@ -212,17 +212,17 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
 
 /* PU bar */
 #puBar{display:flex;gap:6px;padding:5px 14px;background:rgba(6,7,13,.8);
-  border-bottom:1px solid var(--bord);min-height:34px;flex-shrink:0;
-  flex-wrap:wrap;align-items:center}
+  border-bottom:1px solid var(--bord);min-height:0;flex-shrink:0;
+  flex-wrap:wrap;align-items:center;transition:min-height .2s}
+#puBar:empty{min-height:0;padding:0;border-bottom:none}
 .pu-badge{display:flex;align-items:center;gap:5px;background:var(--surf2);
   border:1px solid var(--bord);border-radius:20px;padding:3px 10px;font-size:.65rem;font-weight:600}
 .pu-tbar{width:40px;height:3px;background:var(--bord);border-radius:2px;overflow:hidden}
 .pu-tfill{height:100%;border-radius:2px;transition:width .15s linear}
 
 /* Canvas area */
-#canvasWrap{flex:1;position:relative;overflow:hidden;
-  display:flex;align-items:center;justify-content:center;background:var(--bg)}
-#gameCanvas{display:block;touch-action:none}
+#canvasWrap{flex:1;position:relative;overflow:hidden;background:var(--bg)}
+#gameCanvas{display:block;touch-action:none;position:absolute;top:0;left:0;width:100%;height:100%}
 
 /* ═══════════════════════════════════════════════════════════════
    SCREENS (fullscreen overlays over #main)
@@ -254,18 +254,23 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
 @keyframes slither{0%,100%{transform:translateX(0)}40%{transform:translateX(6px)}70%{transform:translateX(-4px)}}
 .sp-seg{border-radius:50%;flex-shrink:0;transition:all .3s}
 
+/* Home image fill gap above wallet */
+.menu-home{display:flex;justify-content:center;align-items:center;flex:1;margin-bottom:19px;width:100%;min-height:0}
+.menu-home-img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 14px rgba(0,229,160,.35))}
+
 /* Wallet bar */
 .menu-wallet{display:flex;gap:16px;background:var(--surf);border:1px solid var(--bord2);
-  border-radius:50px;padding:8px 20px;margin-bottom:14px;font-weight:700;font-size:.9rem}
+  border-radius:50px;padding:8px 20px;margin-bottom:19px;font-weight:700;font-size:.9rem}
 .mwc{color:var(--gold)}.mwd{color:var(--cyan)}
 
-/* HS row */
-  .menu-hs{display:flex;gap:12px;margin-bottom:16px;font-size:.72rem;color:var(--dim);flex-wrap:wrap;justify-content:center}
-  .menu-hs-item{display:flex;align-items:center;gap:4px}
-  .menu-hs-val{color:var(--acc);font-weight:700;font-family:'Orbitron',monospace;font-size:.6rem}
+/* HS row — shown above the level cards */
+  .menu-hs{display:flex;gap:10px;margin-bottom:38px;font-size:.72rem;color:var(--dim);flex-wrap:wrap;justify-content:center;padding:0 4px}
+  .menu-hs-item{display:flex;align-items:center;justify-content:center;gap:4px;flex:1;max-width:280px;min-width:100px}
+  .menu-hs-star{font-size:1rem;text-shadow:0 0 8px currentColor}
+  .menu-hs-val{font-weight:700;font-family:'Orbitron',monospace;font-size:.85rem}
 
 /* Mode cards */
-.mode-cards{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;justify-content:center;padding:0 4px}
+.mode-cards{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;justify-content:center;padding:0 4px}
 
 /* Reorganized mobile layout spacing */
 .menu-actions{margin-bottom:16px;padding:0 8px}
@@ -293,8 +298,9 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
   padding:2px 6px;border-radius:999px;border:1px solid var(--bord2);color:var(--dim);background:#ffffff08}
 
 /* Action buttons */
-.menu-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:12px;padding:0 8px}
-.menu-tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;padding:0 8px}
+.menu-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:0;padding:0 8px}
+.menu-tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;padding:0 8px;
+  margin-top:38px;padding-bottom:max(16px,env(safe-area-inset-bottom))}
 
 /* ═══════════════════════════════════════════════════════════════
    BUTTONS
@@ -421,6 +427,51 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
 .boost-up-btn:hover{background:rgba(0,229,160,.2);box-shadow:0 0 12px rgba(0,229,160,.24)}
 .boost-up-btn:disabled{border-color:var(--bord);background:var(--surf2);color:var(--dim);cursor:not-allowed;box-shadow:none}
 
+/* ═══════════════════════════════════════════════════════════════
+   INFO SCREEN (food values + powers)
+═══════════════════════════════════════════════════════════════ */
+.info-section-title{font-family:'Orbitron',monospace;font-size:.62rem;font-weight:700;
+  letter-spacing:.18em;color:var(--dim);margin:6px 0 10px;text-transform:uppercase}
+.info-section-title:not(:first-child){margin-top:22px}
+
+/* Compact food value cards */
+.info-food-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(150px,100%),1fr));gap:8px}
+.info-food-card{display:flex;align-items:center;gap:8px;background:var(--surf);
+  border:1px solid var(--bord);border-radius:10px;padding:8px 10px;transition:border-color .18s}
+.info-food-card:hover{border-color:var(--acc)}
+.info-food-emoji{font-size:1.15rem;flex-shrink:0;line-height:1}
+.info-food-name{font-size:.68rem;font-weight:600;color:var(--text);flex:1;min-width:0;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.info-food-pts{font-family:'Orbitron',monospace;font-size:.62rem;font-weight:700;flex-shrink:0}
+
+/* Power cards */
+.info-pu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(280px,100%),1fr));gap:10px}
+.info-pu-card{background:var(--surf);border:1px solid var(--bord);border-radius:12px;
+  padding:12px 14px;transition:border-color .18s,transform .18s}
+.info-pu-card:hover{border-color:var(--acc);transform:translateY(-2px)}
+.info-pu-head{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.info-pu-emoji{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;
+  justify-content:center;font-size:1.15rem;border:1px solid;flex-shrink:0}
+.info-pu-label{font-family:'Orbitron',monospace;font-size:.66rem;font-weight:700;
+  letter-spacing:.12em}
+.info-pu-desc{font-size:.72rem;color:var(--dim);line-height:1.5}
+
+/* Mobile: tighter spacing so no scroll needed */
+@media(max-width:768px){
+  .info-food-grid{grid-template-columns:repeat(2,1fr);gap:6px}
+  .info-food-card{padding:6px 8px;border-radius:8px}
+  .info-food-emoji{font-size:1rem}
+  .info-food-name{font-size:.62rem}
+  .info-food-pts{font-size:.56rem}
+  .info-pu-grid{grid-template-columns:1fr;gap:8px}
+  .info-pu-card{padding:10px 12px;border-radius:10px}
+  .info-pu-emoji{width:30px;height:30px;font-size:1rem;border-radius:8px}
+  .info-pu-label{font-size:.6rem}
+  .info-pu-desc{font-size:.68rem;line-height:1.45}
+  .info-section-title{font-size:.56rem;margin:4px 0 8px}
+  .info-section-title:not(:first-child){margin-top:16px}
+}
+
 /* Settings specifics */
 .set-group{margin-bottom:26px}
 .set-label{font-family:'Orbitron',monospace;font-size:.58rem;letter-spacing:.16em;
@@ -521,25 +572,37 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
   .snake-prev{margin-bottom:12px}
   .sp-seg{width:12px !important;height:12px !important}
   
+  .menu-home{margin-bottom:12px}
+  .menu-home-img{width:100%;height:100%}
+
   .menu-wallet{
     gap:18px;
     padding:12px 28px;
     font-size:.92rem;
-    margin-bottom:18px;
+    margin-bottom:19px;
     border-radius:60px;
     box-shadow:0 4px 20px rgba(0,0,0,.3);
     background:linear-gradient(135deg,rgba(13,16,32,.9),rgba(18,22,40,.8));
   }
   
   .menu-hs{
-    gap:16px;
+    gap:6px;
     font-size:.75rem;
     margin-bottom:38px;
+    padding:0 4px;
+    flex-wrap:nowrap;
   }
+  .menu-hs-item{
+    flex:1;
+    min-width:0;
+    max-width:none;
+  }
+  .menu-hs-star{font-size:.9rem}
+  .menu-hs-val{font-size:.75rem}
   
   .mode-cards{
     gap:6px;
-    margin-bottom:38px;
+    margin-bottom:10px;
     padding:0 4px;
   }
   
@@ -590,7 +653,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
   }
   
   .menu-actions{
-    margin-bottom:38px;
+    margin-bottom:0;
     padding:0 8px;
   }
   
@@ -603,7 +666,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
   
   .menu-tabs{
     gap:8px;
-    padding:0 8px 75px 8px;
+    padding:0 8px;
+    margin-top:38px;
+    padding-bottom:max(16px,env(safe-area-inset-bottom));
   }
   
   .tab-btn{
