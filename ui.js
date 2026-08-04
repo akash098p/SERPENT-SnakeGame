@@ -6,17 +6,46 @@ let curScreen='menuScreen';
 const ALL_SCREENS=['menuScreen','themeScreen','skinScreen','boostScreen','infoScreen','settingsScreen'];
 
 // ── INFO SCREEN ───────────────────────────────────────────────────
+const POWER_DESCS={
+  speed_boost:  'Boosts your speed — the snake moves ~2× faster for a short burst.',
+  invincible:   'Shield — you cannot die from hitting your own body.',
+  double_points:'Double points — every food you eat is worth 2× points.',
+  ghost_mode:   'Ghost — pass through walls and wrap around to the other side.',
+  shrink:       'Shrink — instantly cuts your snake down to just 4 segments.',
+  magnet:       'Magnet — pulls nearby food and coins toward your head.'
+};
+
 function buildInfo(){
   const content=document.getElementById('infoContent');content.innerHTML='';
-  const grid=document.createElement('div');grid.className='card-grid';
+
+  // ── FOOD VALUES (compact) ──
+  const foodTitle=document.createElement('div');foodTitle.className='info-section-title';foodTitle.textContent='🍎 FOOD VALUES';
+  content.appendChild(foodTitle);
+  const grid=document.createElement('div');grid.className='info-food-grid';
   Object.entries(FOODS).forEach(([k,v])=>{
-    const card=document.createElement('div');card.className='s-card';
-    card.innerHTML=`<div class="s-icon" style="font-size:2.5rem">${v.emoji}</div>
-      <div class="s-body"><div class="s-name">${k[0].toUpperCase()+k.slice(1)}</div>
-      <div class="s-desc">Points: <span style="color:${v.color};font-weight:700">+${v.pts}</span></div></div>`;
+    const card=document.createElement('div');card.className='info-food-card';
+    card.innerHTML=`<span class="info-food-emoji">${v.emoji}</span>
+      <span class="info-food-name">${k[0].toUpperCase()+k.slice(1)}</span>
+      <span class="info-food-pts" style="color:${v.color}">+${v.pts}</span>`;
     grid.appendChild(card);
   });
   content.appendChild(grid);
+
+  // ── POWERS ──
+  const puTitle=document.createElement('div');puTitle.className='info-section-title';puTitle.textContent='⚡ POWERS';
+  content.appendChild(puTitle);
+  const puGrid=document.createElement('div');puGrid.className='info-pu-grid';
+  Object.entries(POWERUPS).forEach(([k,v])=>{
+    const card=document.createElement('div');card.className='info-pu-card';
+    card.style.borderColor=v.color+'55';
+    card.innerHTML=`<div class="info-pu-head">
+        <span class="info-pu-emoji" style="background:${v.color}22;border-color:${v.color}66">${v.emoji}</span>
+        <span class="info-pu-label" style="color:${v.color}">${v.label}</span>
+      </div>
+      <div class="info-pu-desc">${POWER_DESCS[k]||''}</div>`;
+    puGrid.appendChild(card);
+  });
+  content.appendChild(puGrid);
 }
 
 // ── MENU BUILD ────────────────────────────────────────────────────
@@ -35,7 +64,8 @@ function buildMenu(){
   const mhs=document.getElementById('menuHs');mhs.innerHTML='';
   Object.entries(MODES).forEach(([k,v])=>{
     const d=document.createElement('div');d.className='menu-hs-item';
-    d.innerHTML=`${v.emoji} <span class="menu-hs-val">${HS[k]||0}</span>`;mhs.appendChild(d);
+    d.innerHTML=`<span class="menu-hs-star" style="color:${v.color}">★</span> <span class="menu-hs-val" style="color:${v.color}">${HS[k]||0}</span>`;
+    mhs.appendChild(d);
   });
   const mc=document.getElementById('modeCards');mc.innerHTML='';
   const modeImages={easy:'images/easy.png',medium:'images/medium.png',hard:'images/hard.png'};
