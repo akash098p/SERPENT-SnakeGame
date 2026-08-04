@@ -1,4 +1,4 @@
-# 🐍 SERPENT - Snake Game+  
+# 🐍 SERPENT - Snake Evolved  
 ![Status](https://img.shields.io/badge/status-active-brightgreen)
 ![Platform](https://img.shields.io/badge/platform-web-blue)
 ![Tech](https://img.shields.io/badge/tech-JavaScript-yellow)
@@ -24,8 +24,19 @@ A modern, feature-rich Snake Game built using HTML, CSS, and JavaScript, enhance
 ---
 ### 📷 Screenshots
 
-<img width="1915" height="1002" alt="Screenshot 2026-08-03 185713" src="https://github.com/user-attachments/assets/1e9f3170-8843-4dad-b98b-50979e7e4ae9" />
-<img width="1905" height="1022" alt="Screenshot 2026-08-03 185749" src="https://github.com/user-attachments/assets/8db7d217-7764-493f-9ede-012a37ac32a3" />
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/ec409e2f-0423-4ac0-b2d0-1d5ca80cb8d2" width="46.2%">
+  <img src="https://github.com/user-attachments/assets/b34f2f3b-259b-45bc-9284-80f44a26d5a1" width="49.8%">
+<br>
+  <img src="https://github.com/user-attachments/assets/c4ba1b57-c093-4535-8184-915ef8ed1c09" width="31.9%">
+  <img src="https://github.com/user-attachments/assets/dc235369-cfb7-45e0-8c80-b966b1862659" width="32.2%">
+  <img src="https://github.com/user-attachments/assets/2e30818b-f188-489a-a9ac-cc9afb25885d" width="31.9%">
+<br>
+  <img src="https://github.com/user-attachments/assets/18195fd5-e9b2-478c-9184-bedd1e0d180e" width="48.2%">
+  <img src="https://github.com/user-attachments/assets/fbf8b14d-f939-4f23-bfc9-03b44805bf5b" width="47.8%">
+
+</p>
+
 
 ---
 
