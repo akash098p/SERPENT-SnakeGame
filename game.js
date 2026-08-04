@@ -10,11 +10,13 @@ let CELL=28,COLS=22,ROWS=18;
 function resizeCanvas(){
   const wrap=document.getElementById('canvasWrap');
   const W=wrap.clientWidth,H=wrap.clientHeight;
-  CELL=Math.max(16,Math.floor(Math.min(W/24,H/20)));
+  CELL=Math.max(16,Math.floor(Math.min(W/COLS,H/ROWS)));
   COLS=Math.floor(W/CELL);
   ROWS=Math.floor(H/CELL);
   canvas.width=COLS*CELL;
-  canvas.height=ROWS*CELL;
+  canvas.height=H;
+  canvas.style.width='100%';
+  canvas.style.height='100%';
 }
 
 // ── STATE ─────────────────────────────────────────────────────────
